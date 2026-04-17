@@ -1,0 +1,2857 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Firna Ardiyana — Quality Assurance &amp; Technical Coordination</title>
+<meta name="description" content="Firna Ardiyana — QA Specialist and Technical Coordinator with a chemistry foundation. Portfolio showcasing experience in quality assurance, documentation systems, KPI monitoring, and IMS audit at PT Merak Chemicals Indonesia.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ================================================================
+   DESIGN TOKENS
+   ================================================================ */
+:root {
+    /* Navy palette */
+    --navy-900: #0A1628;
+    --navy-800: #0F1F3A;
+    --navy-700: #1E3A5F;
+    --navy-600: #2C4F7C;
+
+    /* Teal accent */
+    --teal-400: #2DD4BF;
+    --teal-500: #14B8A6;
+    --teal-600: #0D9488;
+    --teal-glow: rgba(20, 184, 166, 0.15);
+
+    /* Neutrals */
+    --white: #FFFFFF;
+    --off-white: #F8FAFC;
+    --gray-100: #F1F5F9;
+    --gray-200: #E2E8F0;
+    --gray-300: #CBD5E1;
+    --gray-400: #94A3B8;
+    --gray-500: #64748B;
+    --gray-600: #475569;
+    --gray-700: #334155;
+    --gray-900: #0F172A;
+
+    /* Functional */
+    --border: #E2E8F0;
+    --border-strong: #CBD5E1;
+    --shadow-sm: 0 2px 8px rgba(10, 22, 40, 0.04);
+    --shadow-md: 0 10px 30px rgba(10, 22, 40, 0.06);
+    --shadow-lg: 0 20px 60px rgba(10, 22, 40, 0.1);
+    --shadow-teal: 0 10px 30px rgba(20, 184, 166, 0.15);
+
+    /* Motion */
+    --ease: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --transition: all 0.4s var(--ease);
+    --transition-fast: all 0.25s var(--ease);
+
+    /* Fonts */
+    --font-display: 'Space Grotesk', system-ui, sans-serif;
+    --font-body: 'Inter', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+}
+
+/* ================================================================
+   BASE
+   ================================================================ */
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+    font-family: var(--font-body);
+    background: var(--off-white);
+    color: var(--gray-900);
+    line-height: 1.6;
+    overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    position: relative;
+}
+
+/* Graph-paper grid overlay */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(15, 31, 58, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(15, 31, 58, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 1;
+}
+
+main, nav, header, section, footer { position: relative; z-index: 2; }
+
+img { max-width: 100%; display: block; }
+
+::selection {
+    background: var(--teal-500);
+    color: var(--white);
+}
+
+/* ================================================================
+   PRELOADER
+   ================================================================ */
+.preloader {
+    position: fixed;
+    inset: 0;
+    background: var(--navy-900);
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+.preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.hex-loader {
+    width: 80px;
+    height: 80px;
+    animation: rotate 2.5s linear infinite;
+}
+
+.hex-loader polygon {
+    fill: none;
+    stroke: var(--teal-400);
+    stroke-width: 2;
+    stroke-dasharray: 400;
+    stroke-dashoffset: 400;
+    animation: draw 2.5s ease-in-out infinite;
+}
+
+@keyframes rotate {
+    to { transform: rotate(360deg); }
+}
+
+@keyframes draw {
+    0%, 100% { stroke-dashoffset: 400; }
+    50% { stroke-dashoffset: 0; }
+}
+
+.loader-text {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--teal-400);
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
+}
+
+/* ================================================================
+   SCROLL PROGRESS
+   ================================================================ */
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--teal-500), var(--teal-400));
+    width: 0%;
+    z-index: 1001;
+    transition: width 0.1s linear;
+    box-shadow: 0 0 10px var(--teal-glow);
+}
+
+/* ================================================================
+   NAVIGATION
+   ================================================================ */
+nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1.25rem 6%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(248, 250, 252, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    z-index: 1000;
+    border-bottom: 1px solid transparent;
+    transition: var(--transition);
+}
+
+nav.scrolled {
+    padding: 0.9rem 6%;
+    background: rgba(248, 250, 252, 0.95);
+    border-bottom: 1px solid var(--border);
+    box-shadow: var(--shadow-sm);
+}
+
+.nav-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    text-decoration: none;
+    color: var(--navy-900);
+}
+
+.brand-hex {
+    width: 32px;
+    height: 32px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.brand-hex svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: var(--navy-900);
+    transition: fill 0.3s ease;
+}
+
+.brand-hex span {
+    position: relative;
+    z-index: 2;
+    color: var(--white);
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+.nav-brand:hover .brand-hex svg { fill: var(--teal-500); }
+
+.nav-brand-text {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 0.95rem;
+    letter-spacing: 0.02em;
+}
+
+.nav-brand-text span {
+    color: var(--gray-400);
+    font-weight: 400;
+}
+
+.nav-links {
+    display: flex;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.nav-links a {
+    text-decoration: none;
+    color: var(--gray-600);
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    padding: 0.5rem 0.9rem;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.nav-links a::before {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: var(--teal-500);
+    transition: width 0.3s ease;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: var(--navy-900);
+}
+
+.nav-links a.active {
+    color: var(--teal-600);
+}
+
+.nav-links a:hover::before,
+.nav-links a.active::before { width: 20px; }
+
+.nav-cta {
+    padding: 0.55rem 1.1rem;
+    background: var(--navy-900);
+    color: var(--white) !important;
+    border-radius: 2px;
+    transition: var(--transition-fast);
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.nav-cta:hover {
+    background: var(--teal-500) !important;
+    color: var(--white) !important;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-teal);
+}
+
+.nav-cta::before { display: none !important; }
+
+.menu-toggle {
+    display: none;
+    background: none;
+    border: 1px solid var(--border);
+    padding: 0.5rem;
+    cursor: pointer;
+    flex-direction: column;
+    gap: 4px;
+    width: 40px;
+    height: 40px;
+    justify-content: center;
+    align-items: center;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 18px;
+    height: 1.5px;
+    background: var(--navy-900);
+    transition: var(--transition-fast);
+}
+
+/* ================================================================
+   SECTION COMMON
+   ================================================================ */
+.section {
+    padding: 8rem 6%;
+    position: relative;
+}
+
+.section-header {
+    display: flex;
+    align-items: baseline;
+    gap: 2rem;
+    margin-bottom: 4rem;
+    flex-wrap: wrap;
+}
+
+.section-ref {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    color: var(--teal-600);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    white-space: nowrap;
+}
+
+.section-ref::before {
+    content: '';
+    width: 24px;
+    height: 1px;
+    background: var(--teal-500);
+}
+
+.section-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 4vw, 3rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--navy-900);
+    flex: 1;
+    min-width: 280px;
+}
+
+.section-title .accent {
+    color: var(--teal-500);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.section-desc {
+    color: var(--gray-600);
+    font-size: 1rem;
+    max-width: 480px;
+    line-height: 1.7;
+}
+
+/* ================================================================
+   HERO
+   ================================================================ */
+.hero {
+    min-height: 100vh;
+    padding: 9rem 6% 5rem;
+    display: grid;
+    grid-template-columns: 1.3fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+}
+
+/* Floating hexagonal accents */
+.hero-accent {
+    position: absolute;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+.hero-accent-1 {
+    top: 15%;
+    right: 45%;
+    width: 80px;
+    animation: float 6s ease-in-out infinite;
+}
+
+.hero-accent-2 {
+    bottom: 15%;
+    left: 45%;
+    width: 50px;
+    animation: float 4s ease-in-out infinite reverse;
+}
+
+.hero-accent svg { fill: none; stroke: var(--teal-500); stroke-width: 1; }
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0); }
+    50% { transform: translateY(-20px) rotate(10deg); }
+}
+
+.hero-meta {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--teal-600);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    opacity: 0;
+    animation: slideUp 0.8s var(--ease-out) 0.3s forwards;
+}
+
+.hero-meta::before {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--teal-500);
+}
+
+.hero-tagline {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 500;
+    color: var(--gray-600);
+    margin-bottom: 1rem;
+    letter-spacing: 0.02em;
+    opacity: 0;
+    animation: slideUp 0.8s var(--ease-out) 0.5s forwards;
+}
+
+.hero h1 {
+    font-family: var(--font-display);
+    font-size: clamp(2.8rem, 6vw, 5rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--navy-900);
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: slideUp 1s var(--ease-out) 0.7s forwards;
+}
+
+.hero h1 .line-1 { display: block; }
+.hero h1 .line-2 {
+    display: block;
+    color: var(--teal-500);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.hero-title-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.5rem 1rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--teal-500);
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--navy-900);
+    letter-spacing: 0.05em;
+    margin-bottom: 1.8rem;
+    opacity: 0;
+    animation: slideUp 0.8s var(--ease-out) 0.9s forwards;
+}
+
+.hero-title-badge::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    background: var(--teal-500);
+    border-radius: 50%;
+    animation: blink 2s ease-in-out infinite;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.4); }
+}
+
+.hero-summary {
+    font-size: 1.05rem;
+    color: var(--gray-600);
+    max-width: 560px;
+    margin-bottom: 2.5rem;
+    line-height: 1.75;
+    opacity: 0;
+    animation: slideUp 0.8s var(--ease-out) 1.1s forwards;
+}
+
+.hero-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    opacity: 0;
+    animation: slideUp 0.8s var(--ease-out) 1.3s forwards;
+}
+
+.btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding: 0.95rem 1.6rem;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: var(--transition-fast);
+    cursor: pointer;
+    border: none;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary {
+    background: var(--navy-900);
+    color: var(--white);
+}
+
+.btn-primary:hover {
+    background: var(--teal-500);
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-teal);
+}
+
+.btn-secondary {
+    background: transparent;
+    color: var(--navy-900);
+    border: 1px solid var(--gray-300);
+}
+
+.btn-secondary:hover {
+    background: var(--navy-900);
+    color: var(--white);
+    border-color: var(--navy-900);
+    transform: translateY(-3px);
+}
+
+.btn svg {
+    width: 14px;
+    height: 14px;
+    transition: transform 0.3s ease;
+}
+
+.btn:hover svg { transform: translateX(3px); }
+
+.btn-primary:hover svg:not(.no-move) { transform: translateY(2px); }
+
+/* Hero image / photo */
+.hero-visual {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    animation: fadeIn 1s ease 1s forwards;
+}
+
+.photo-frame {
+    position: relative;
+    width: 100%;
+    max-width: 380px;
+    aspect-ratio: 1 / 1.1;
+}
+
+.photo-hex {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--navy-700), var(--navy-900));
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    overflow: hidden;
+    box-shadow: var(--shadow-lg);
+}
+
+.photo-hex img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center top;
+    filter: grayscale(20%) contrast(1.05);
+    transition: filter 0.6s ease;
+}
+
+.photo-frame:hover .photo-hex img {
+    filter: grayscale(0%) contrast(1.1);
+}
+
+/* Hex border accent */
+.photo-border {
+    position: absolute;
+    inset: -15px;
+    border: 1.5px solid var(--teal-500);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    opacity: 0.6;
+    transition: var(--transition);
+}
+
+.photo-frame:hover .photo-border {
+    inset: -25px;
+    opacity: 1;
+}
+
+/* Technical corners */
+.photo-corner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    pointer-events: none;
+}
+
+.photo-corner svg { width: 100%; height: 100%; stroke: var(--teal-500); stroke-width: 1.5; fill: none; }
+.corner-tl { top: -25px; left: -25px; }
+.corner-tr { top: -25px; right: -25px; transform: rotate(90deg); }
+.corner-bl { bottom: -25px; left: -25px; transform: rotate(-90deg); }
+.corner-br { bottom: -25px; right: -25px; transform: rotate(180deg); }
+
+/* Spec label next to photo */
+.photo-spec {
+    position: absolute;
+    top: 50%;
+    right: -60px;
+    transform: translateY(-50%) rotate(90deg);
+    transform-origin: left center;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+/* Hero bottom strip with stats */
+.hero-strip {
+    position: absolute;
+    bottom: 0;
+    left: 6%;
+    right: 6%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid var(--border);
+    padding: 1.5rem 0;
+    opacity: 0;
+    animation: fadeIn 1s ease 1.5s forwards;
+}
+
+.strip-item {
+    padding: 0 1.5rem;
+    border-right: 1px solid var(--border);
+}
+
+.strip-item:last-child { border-right: none; }
+
+.strip-label {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gray-400);
+    margin-bottom: 0.3rem;
+}
+
+.strip-value {
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: var(--navy-900);
+}
+
+.strip-value .dim { color: var(--gray-400); font-weight: 400; }
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    to { opacity: 1; }
+}
+
+/* ================================================================
+   ABOUT
+   ================================================================ */
+.about {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 5rem;
+    align-items: start;
+}
+
+.about-text {
+    font-size: 1.05rem;
+    color: var(--gray-700);
+    line-height: 1.85;
+}
+
+.about-text p { margin-bottom: 1.5rem; }
+
+.about-text p:first-of-type::first-letter {
+    font-family: var(--font-display);
+    font-size: 3.5rem;
+    font-weight: 600;
+    color: var(--teal-500);
+    float: left;
+    line-height: 1;
+    margin: 0.1em 0.15em 0 0;
+}
+
+.about-text strong {
+    color: var(--navy-900);
+    font-weight: 600;
+}
+
+.about-signature {
+    margin-top: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--border-strong);
+}
+
+.signature-line {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    color: var(--gray-500);
+    letter-spacing: 0.1em;
+}
+
+.signature-name {
+    font-family: var(--font-display);
+    font-weight: 600;
+    color: var(--navy-900);
+}
+
+/* Stats panel */
+.stats-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+    background: var(--navy-900);
+    color: var(--white);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-panel::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 30px 30px;
+    pointer-events: none;
+}
+
+.stats-panel::after {
+    content: '';
+    position: absolute;
+    top: -30px;
+    right: -30px;
+    width: 140px;
+    height: 140px;
+    border: 1px solid rgba(45, 212, 191, 0.2);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+    pointer-events: none;
+}
+
+.stat-cell {
+    padding: 2.2rem 1.8rem;
+    position: relative;
+    z-index: 2;
+    border-right: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    transition: background 0.3s ease;
+}
+
+.stat-cell:nth-child(2n) { border-right: none; }
+.stat-cell:nth-last-child(-n+2) { border-bottom: none; }
+
+.stat-cell:hover {
+    background: rgba(20, 184, 166, 0.08);
+}
+
+.stat-code {
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    color: var(--teal-400);
+    text-transform: uppercase;
+    margin-bottom: 0.6rem;
+}
+
+.stat-number {
+    font-family: var(--font-display);
+    font-size: 2.3rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--white);
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.stat-number .unit {
+    font-size: 1rem;
+    color: var(--teal-400);
+    font-weight: 400;
+}
+
+.stat-caption {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.4;
+}
+
+/* ================================================================
+   EXPERIENCE TIMELINE
+   ================================================================ */
+.experience {
+    background: var(--off-white);
+}
+
+.timeline {
+    position: relative;
+    max-width: 1000px;
+    margin: 0 auto;
+    padding-left: 60px;
+}
+
+/* Vertical rail */
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 10px;
+    bottom: 10px;
+    width: 1px;
+    background:
+        linear-gradient(to bottom,
+            var(--teal-500) 0%,
+            var(--teal-500) 50%,
+            var(--border-strong) 50%,
+            var(--border-strong) 100%);
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+    background-position: 0 var(--progress, 0);
+}
+
+.timeline::after {
+    content: '';
+    position: absolute;
+    left: 14px;
+    top: 0;
+    width: 13px;
+    height: 13px;
+    background: var(--navy-900);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.tl-item {
+    position: relative;
+    padding-bottom: 3.5rem;
+    opacity: 0;
+    transform: translateX(30px);
+    transition: opacity 0.7s ease, transform 0.7s var(--ease-out);
+}
+
+.tl-item.visible {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.tl-item:last-child { padding-bottom: 0; }
+
+/* Hexagonal node */
+.tl-node {
+    position: absolute;
+    left: -55px;
+    top: 0;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.tl-node svg {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: var(--off-white);
+    stroke: var(--border-strong);
+    stroke-width: 1.5;
+    transition: var(--transition);
+}
+
+.tl-node .inner-dot {
+    width: 8px;
+    height: 8px;
+    background: var(--border-strong);
+    border-radius: 50%;
+    position: relative;
+    z-index: 2;
+    transition: var(--transition);
+}
+
+.tl-item.active .tl-node svg {
+    fill: var(--teal-500);
+    stroke: var(--teal-500);
+}
+
+.tl-item.active .tl-node .inner-dot {
+    background: var(--white);
+    box-shadow: 0 0 0 4px var(--teal-glow);
+}
+
+/* Card */
+.tl-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 2.2rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.tl-card:hover {
+    border-color: var(--teal-500);
+    box-shadow: var(--shadow-md);
+    transform: translateY(-3px);
+}
+
+.tl-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--teal-500), var(--teal-400));
+    transition: width 0.5s var(--ease);
+}
+
+.tl-card:hover::before { width: 100%; }
+
+.tl-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px dashed var(--border);
+    flex-wrap: wrap;
+}
+
+.tl-meta { flex: 1; min-width: 240px; }
+
+.tl-role {
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+    color: var(--navy-900);
+    line-height: 1.3;
+    margin-bottom: 0.4rem;
+}
+
+.tl-company {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    color: var(--gray-600);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.tl-company::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    background: var(--teal-500);
+    border-radius: 50%;
+}
+
+.tl-date {
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    letter-spacing: 0.1em;
+    color: var(--teal-600);
+    background: var(--teal-glow);
+    padding: 0.45rem 0.9rem;
+    border-radius: 2px;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.tl-date.current {
+    background: var(--teal-500);
+    color: var(--white);
+}
+
+.tl-list {
+    list-style: none;
+    display: grid;
+    gap: 0.85rem;
+}
+
+.tl-list li {
+    position: relative;
+    padding-left: 1.6rem;
+    color: var(--gray-700);
+    font-size: 0.93rem;
+    line-height: 1.7;
+}
+
+.tl-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 11px;
+    width: 12px;
+    height: 1px;
+    background: var(--teal-500);
+}
+
+.tl-list li strong {
+    color: var(--navy-900);
+    font-weight: 600;
+}
+
+.tl-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px dashed var(--border);
+}
+
+.tl-tag {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    padding: 0.3rem 0.65rem;
+    background: var(--gray-100);
+    color: var(--gray-700);
+    letter-spacing: 0.05em;
+    border: 1px solid var(--border);
+    transition: var(--transition-fast);
+}
+
+.tl-tag:hover {
+    background: var(--navy-900);
+    color: var(--white);
+    border-color: var(--navy-900);
+}
+
+/* ================================================================
+   EDUCATION
+   ================================================================ */
+.education {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.edu-main {
+    background: var(--navy-900);
+    color: var(--white);
+    padding: 3.5rem;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 2rem;
+}
+
+.edu-main::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.edu-main::after {
+    content: '';
+    position: absolute;
+    top: -80px;
+    right: -80px;
+    width: 280px;
+    height: 280px;
+    background: radial-gradient(circle, rgba(45, 212, 191, 0.1) 0%, transparent 70%);
+}
+
+.edu-main-content { position: relative; z-index: 2; }
+
+.edu-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    flex-wrap: wrap;
+}
+
+.edu-degree {
+    font-family: var(--font-display);
+    font-size: 2rem;
+    font-weight: 600;
+    line-height: 1.2;
+    margin-bottom: 0.5rem;
+    letter-spacing: -0.02em;
+}
+
+.edu-university {
+    color: var(--teal-400);
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+}
+
+.edu-period {
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    background: rgba(255, 255, 255, 0.06);
+    padding: 0.5rem 0.9rem;
+    border-radius: 2px;
+    white-space: nowrap;
+}
+
+.edu-gpa {
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.2rem 1.5rem;
+    background: rgba(20, 184, 166, 0.1);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    border-left: 3px solid var(--teal-500);
+    margin-bottom: 2rem;
+}
+
+.edu-gpa-label {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal-400);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+}
+
+.edu-gpa-value {
+    font-family: var(--font-display);
+    font-size: 1.8rem;
+    font-weight: 600;
+    color: var(--white);
+}
+
+.edu-gpa-value .denominator {
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 400;
+    font-size: 1.1rem;
+}
+
+.edu-achievements {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.edu-achievement {
+    padding: 1.3rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    transition: var(--transition);
+}
+
+.edu-achievement:hover {
+    background: rgba(20, 184, 166, 0.08);
+    border-color: rgba(20, 184, 166, 0.3);
+    transform: translateY(-3px);
+}
+
+.edu-achievement-icon {
+    width: 32px;
+    height: 32px;
+    background: var(--teal-500);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--white);
+    margin-bottom: 0.9rem;
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.edu-achievement-icon svg { width: 14px; height: 14px; stroke: white; fill: none; stroke-width: 2; }
+
+.edu-achievement h4 {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    margin-bottom: 0.4rem;
+}
+
+.edu-achievement p {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 1.6;
+}
+
+/* Secondary education */
+.edu-secondary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.edu-sec-card {
+    padding: 1.5rem;
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition-fast);
+}
+
+.edu-sec-card:hover {
+    border-color: var(--teal-500);
+    background: var(--white);
+}
+
+.edu-sec-card h5 {
+    font-family: var(--font-display);
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--navy-900);
+    margin-bottom: 0.2rem;
+}
+
+.edu-sec-card p {
+    font-size: 0.82rem;
+    color: var(--gray-500);
+}
+
+.edu-sec-year {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal-600);
+    letter-spacing: 0.1em;
+    white-space: nowrap;
+}
+
+/* ================================================================
+   SKILLS
+   ================================================================ */
+.skills {
+    background: var(--off-white);
+}
+
+.skills-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: start;
+}
+
+.skill-category-head {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.skill-category-num {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal-600);
+    letter-spacing: 0.2em;
+    background: var(--teal-glow);
+    padding: 0.35rem 0.7rem;
+}
+
+.skill-category-head h3 {
+    font-family: var(--font-display);
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--navy-900);
+}
+
+/* Skill bars */
+.skill-bar {
+    margin-bottom: 1.6rem;
+}
+
+.skill-bar-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 0.55rem;
+}
+
+.skill-bar-label {
+    font-family: var(--font-body);
+    font-size: 0.93rem;
+    font-weight: 500;
+    color: var(--navy-900);
+}
+
+.skill-bar-value {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal-600);
+    letter-spacing: 0.1em;
+    font-weight: 500;
+}
+
+.skill-bar-track {
+    height: 5px;
+    background: var(--gray-200);
+    position: relative;
+    overflow: hidden;
+}
+
+.skill-bar-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    background: linear-gradient(90deg, var(--navy-900), var(--teal-500));
+    width: 0;
+    transition: width 1.5s var(--ease-out);
+}
+
+.skill-bar-fill::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--teal-400);
+    box-shadow: 0 0 8px var(--teal-400);
+}
+
+/* Tools grid */
+.tools-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.8rem;
+}
+
+.tool-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 1.2rem 0.9rem;
+    text-align: center;
+    transition: var(--transition-fast);
+    cursor: default;
+}
+
+.tool-card:hover {
+    border-color: var(--teal-500);
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-sm);
+    background: var(--white);
+}
+
+.tool-icon {
+    width: 38px;
+    height: 38px;
+    margin: 0 auto 0.6rem;
+    background: var(--gray-100);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--navy-900);
+    transition: var(--transition);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.tool-card:hover .tool-icon {
+    background: var(--teal-500);
+    color: var(--white);
+    transform: rotate(60deg);
+}
+
+.tool-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+.tool-name {
+    font-family: var(--font-display);
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--navy-900);
+}
+
+/* Soft skill tags */
+.soft-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-top: 1.5rem;
+}
+
+.soft-tag {
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    padding: 0.55rem 1rem;
+    background: var(--white);
+    border: 1px solid var(--border);
+    color: var(--gray-700);
+    transition: var(--transition-fast);
+}
+
+.soft-tag:hover {
+    background: var(--navy-900);
+    color: var(--white);
+    border-color: var(--navy-900);
+    transform: translateY(-2px);
+}
+
+/* ================================================================
+   ORGANIZATIONS
+   ================================================================ */
+.organizations {
+    background: var(--white);
+    border-top: 1px solid var(--border);
+}
+
+.org-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.org-card {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    padding: 1.8rem;
+    transition: var(--transition);
+    position: relative;
+    overflow: hidden;
+}
+
+.org-card:hover {
+    border-color: var(--teal-500);
+    transform: translateY(-5px);
+    background: var(--white);
+    box-shadow: var(--shadow-md);
+}
+
+.org-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 50px;
+    height: 50px;
+    background: linear-gradient(225deg, var(--teal-500) 50%, transparent 50%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.org-card:hover::after { opacity: 0.15; }
+
+.org-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.org-role {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--navy-900);
+    margin-bottom: 0.3rem;
+    line-height: 1.3;
+}
+
+.org-name {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    line-height: 1.4;
+}
+
+.org-period {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: var(--teal-600);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.org-desc {
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    line-height: 1.6;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px dashed var(--border);
+}
+
+.org-badge {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    font-family: var(--font-mono);
+    font-size: 0.65rem;
+    color: var(--gray-400);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+}
+
+/* ================================================================
+   CONTACT
+   ================================================================ */
+.contact {
+    background: var(--navy-900);
+    color: var(--white);
+    padding: 6rem 6%;
+    position: relative;
+    overflow: hidden;
+}
+
+.contact::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.025) 1px, transparent 1px);
+    background-size: 40px 40px;
+}
+
+.contact::after {
+    content: '';
+    position: absolute;
+    top: -100px;
+    right: -100px;
+    width: 400px;
+    height: 400px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.15) 0%, transparent 60%);
+    pointer-events: none;
+}
+
+.contact-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+    z-index: 2;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5rem;
+    align-items: center;
+}
+
+.contact-ref {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal-400);
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.contact-ref::before {
+    content: '';
+    width: 30px;
+    height: 1px;
+    background: var(--teal-400);
+}
+
+.contact-title {
+    font-family: var(--font-display);
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.5rem;
+}
+
+.contact-title .accent {
+    color: var(--teal-400);
+    font-style: italic;
+    font-weight: 400;
+}
+
+.contact-desc {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    max-width: 480px;
+}
+
+.contact-ctas {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+.btn-teal {
+    background: var(--teal-500);
+    color: var(--white);
+}
+
+.btn-teal:hover {
+    background: var(--white);
+    color: var(--navy-900);
+    transform: translateY(-3px);
+    box-shadow: 0 10px 30px rgba(255, 255, 255, 0.2);
+}
+
+.btn-outline-light {
+    background: transparent;
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-outline-light:hover {
+    border-color: var(--teal-400);
+    color: var(--teal-400);
+    transform: translateY(-3px);
+}
+
+.contact-channels {
+    display: grid;
+    gap: 1rem;
+}
+
+.channel {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 1.5rem 1.8rem;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    text-decoration: none;
+    color: var(--white);
+    transition: var(--transition);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.channel::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--teal-500);
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.4s var(--ease);
+}
+
+.channel:hover::before { transform: scaleY(1); }
+
+.channel:hover {
+    background: rgba(20, 184, 166, 0.08);
+    border-color: rgba(20, 184, 166, 0.3);
+    padding-left: 2rem;
+}
+
+.channel-icon {
+    width: 42px;
+    height: 42px;
+    background: rgba(20, 184, 166, 0.15);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--teal-400);
+    flex-shrink: 0;
+    transition: var(--transition);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.channel:hover .channel-icon {
+    background: var(--teal-500);
+    color: var(--white);
+    transform: rotate(60deg);
+}
+
+.channel-icon svg { width: 16px; height: 16px; fill: none; stroke: currentColor; stroke-width: 2; }
+
+.channel-content { flex: 1; min-width: 0; }
+
+.channel-label {
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    color: rgba(255, 255, 255, 0.5);
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+}
+
+.channel-value {
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 500;
+    word-break: break-all;
+}
+
+.channel-action {
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
+    color: var(--teal-400);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.channel:hover .channel-action { opacity: 1; }
+
+/* ================================================================
+   FOOTER
+   ================================================================ */
+footer {
+    background: var(--navy-900);
+    color: rgba(255, 255, 255, 0.5);
+    padding: 2.5rem 6%;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+footer span { letter-spacing: 0.1em; }
+
+footer .accent { color: var(--teal-400); }
+
+/* ================================================================
+   BACK TO TOP
+   ================================================================ */
+.back-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 48px;
+    height: 48px;
+    background: var(--navy-900);
+    color: var(--teal-400);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: var(--transition);
+    z-index: 999;
+    box-shadow: var(--shadow-md);
+    clip-path: polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%);
+}
+
+.back-to-top.visible { opacity: 1; visibility: visible; }
+
+.back-to-top:hover {
+    background: var(--teal-500);
+    color: var(--white);
+    transform: translateY(-5px);
+}
+
+/* ================================================================
+   TOAST
+   ================================================================ */
+.toast {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--navy-900);
+    color: var(--white);
+    padding: 0.9rem 1.5rem;
+    font-family: var(--font-mono);
+    font-size: 0.8rem;
+    letter-spacing: 0.05em;
+    opacity: 0;
+    transition: all 0.4s var(--ease);
+    z-index: 9998;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    border-left: 3px solid var(--teal-500);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+}
+
+.toast svg { width: 16px; height: 16px; stroke: var(--teal-400); fill: none; stroke-width: 2.5; }
+
+/* ================================================================
+   REVEAL ANIMATION
+   ================================================================ */
+.reveal {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s var(--ease-out);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================================================================
+   RESPONSIVE
+   ================================================================ */
+@media (max-width: 1024px) {
+    .hero {
+        grid-template-columns: 1fr;
+        gap: 3rem;
+        padding: 7rem 6% 3rem;
+    }
+    .hero-visual { order: -1; max-width: 300px; margin: 0 auto; }
+    .hero-strip { position: static; margin-top: 3rem; }
+    .about-grid { grid-template-columns: 1fr; gap: 3rem; }
+    .skills-grid { grid-template-columns: 1fr; }
+    .contact-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .tools-grid { grid-template-columns: repeat(4, 1fr); }
+}
+
+@media (max-width: 768px) {
+    .section { padding: 5rem 5%; }
+    .hero { padding: 7rem 5% 3rem; }
+    .section-header { flex-direction: column; gap: 1rem; align-items: flex-start; }
+
+    nav { padding: 1rem 5%; }
+    nav.scrolled { padding: 0.8rem 5%; }
+    .nav-links { display: none; position: fixed; top: 70px; left: 0; right: 0; background: var(--white); flex-direction: column; padding: 1.5rem; border-bottom: 1px solid var(--border); }
+    .nav-links.open { display: flex; }
+    .nav-links a { padding: 0.9rem; width: 100%; border-bottom: 1px dashed var(--border); }
+    .nav-links a::before { display: none; }
+    .nav-cta { margin-top: 0.5rem; justify-content: center; }
+    .menu-toggle { display: flex; }
+
+    .hero-strip {
+        grid-template-columns: 1fr 1fr;
+        gap: 0;
+    }
+    .strip-item { border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 1rem; }
+    .strip-item:nth-child(2n) { border-right: none; }
+    .strip-item:nth-last-child(-n+2) { border-bottom: none; }
+
+    .stats-panel { grid-template-columns: 1fr; }
+    .stat-cell { border-right: none; }
+    .stat-cell:last-child { border-bottom: none; }
+    .stat-cell:not(:last-child) { border-bottom: 1px solid rgba(255, 255, 255, 0.08); }
+
+    .timeline { padding-left: 50px; }
+    .tl-node { left: -48px; width: 26px; height: 26px; }
+    .timeline::before { left: 15px; }
+    .timeline::after { left: 10px; }
+
+    .edu-main { padding: 2rem; }
+    .edu-degree { font-size: 1.5rem; }
+    .edu-header { flex-direction: column; gap: 1rem; }
+
+    .photo-spec { display: none; }
+    .photo-corner { display: none; }
+
+    .tools-grid { grid-template-columns: repeat(3, 1fr); }
+
+    .back-to-top { bottom: 20px; right: 20px; }
+}
+
+@media (max-width: 480px) {
+    .section { padding: 4rem 5%; }
+    .tl-card { padding: 1.5rem; }
+    .tl-header { flex-direction: column; align-items: flex-start; }
+    .tools-grid { grid-template-columns: repeat(2, 1fr); }
+    .channel { padding: 1.2rem; }
+    .channel-action { display: none; }
+    .org-card { padding: 1.5rem; }
+    .org-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader">
+    <svg class="hex-loader" viewBox="0 0 100 100">
+        <polygon points="50,3 95,25 95,75 50,97 5,75 5,25" />
+    </svg>
+    <div class="loader-text">Initializing</div>
+</div>
+
+<!-- ============ SCROLL PROGRESS ============ -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- ============ NAVIGATION ============ -->
+<nav id="navbar">
+    <a href="#home" class="nav-brand">
+        <div class="brand-hex">
+            <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
+            <span>FA</span>
+        </div>
+        <div class="nav-brand-text">Firna Ardiyana<span> / QA</span></div>
+    </a>
+    <div class="nav-links" id="navLinks">
+        <a href="#about">About</a>
+        <a href="#experience">Experience</a>
+        <a href="#education">Education</a>
+        <a href="#skills">Skills</a>
+        <a href="#organizations">Activities</a>
+        <a href="#contact" class="nav-cta">
+            Contact
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Menu">
+        <span></span><span></span><span></span>
+    </button>
+</nav>
+
+<!-- ============ HERO ============ -->
+<header class="hero" id="home">
+    <div class="hero-accent hero-accent-1">
+        <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
+    </div>
+    <div class="hero-accent hero-accent-2">
+        <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25" /></svg>
+    </div>
+
+    <div class="hero-content">
+        <div class="hero-meta">SEC-01 / Portfolio Overview</div>
+        <div class="hero-tagline">Precision. Process. Performance.</div>
+        <h1>
+            <span class="line-1">Firna</span>
+            <span class="line-2">Ardiyana.</span>
+        </h1>
+        <div class="hero-title-badge">
+            Quality Assurance &amp; Technical Coordination Specialist
+        </div>
+        <p class="hero-summary">
+            Chemistry graduate translating laboratory precision into industrial quality systems.
+            I coordinate cross-functional workflows, manage QA documentation, and build the data
+            infrastructure that lets teams make decisions with confidence — currently driving
+            quality operations at PT Merak Chemicals Indonesia.
+        </p>
+        <div class="hero-ctas">
+            <a href="#contact" class="btn btn-primary">
+                Get in touch
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+            </a>
+            <a href="CV_Firna_Ardiyana.pdf" download class="btn btn-secondary">
+                Download CV
+                <svg class="no-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            </a>
+        </div>
+    </div>
+
+    <div class="hero-visual">
+        <div class="photo-frame">
+            <div class="photo-corner corner-tl"><svg viewBox="0 0 24 24"><path d="M0 8V0h8"/></svg></div>
+            <div class="photo-corner corner-tr"><svg viewBox="0 0 24 24"><path d="M0 8V0h8"/></svg></div>
+            <div class="photo-corner corner-bl"><svg viewBox="0 0 24 24"><path d="M0 8V0h8"/></svg></div>
+            <div class="photo-corner corner-br"><svg viewBox="0 0 24 24"><path d="M0 8V0h8"/></svg></div>
+            <div class="photo-border"></div>
+            <div class="photo-hex">
+                <img src="profile.png" alt="Firna Ardiyana">
+            </div>
+            <div class="photo-spec">REF: PROFILE-001 / CILEGON, BANTEN</div>
+        </div>
+    </div>
+
+    <div class="hero-strip">
+        <div class="strip-item">
+            <div class="strip-label">Current Role</div>
+            <div class="strip-value">QA Specialist <span class="dim">/ Coordinator</span></div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-label">Based In</div>
+            <div class="strip-value">Cilegon <span class="dim">/ Banten</span></div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-label">Industry</div>
+            <div class="strip-value">Petrochemical <span class="dim">/ Manufacturing</span></div>
+        </div>
+        <div class="strip-item">
+            <div class="strip-label">Status</div>
+            <div class="strip-value">Available <span class="dim">/ Full-time</span></div>
+        </div>
+    </div>
+</header>
+
+<!-- ============ ABOUT ============ -->
+<section class="section about reveal" id="about">
+    <div class="section-header">
+        <div class="section-ref">SEC-02 / About</div>
+        <h2 class="section-title">A scientist's discipline, <span class="accent">applied</span> at scale.</h2>
+        <p class="section-desc">Where analytical rigor meets operational structure — a profile built on accuracy, accountability, and continuous improvement.</p>
+    </div>
+
+    <div class="about-grid">
+        <div class="about-text">
+            <p>
+                I am a <strong>Chemistry Education graduate</strong> from Universitas Sultan Ageng Tirtayasa,
+                where I built a foundation on laboratory precision, instrumental analysis, and statistical research —
+                graduating with a <strong>3.76 / 4.00 GPA</strong>. That scientific discipline now underpins how I
+                approach quality assurance and technical coordination in industry.
+            </p>
+            <p>
+                Currently based at <strong>PT Merak Chemicals Indonesia</strong>, I coordinate workflows between
+                operations, production, and management teams — maintaining documentation integrity in Odoo,
+                monitoring performance KPIs such as production rate and PTA ratio, and contributing to the
+                <strong>Integrated Management System (IMS) audit cycle</strong>. Alongside this, I design
+                Power BI dashboards that translate raw QA data into decisions.
+            </p>
+            <p>
+                My background in teaching sharpens what matters most in QA work: the ability to communicate
+                precisely, document thoroughly, and adapt to changing technical environments without losing
+                accuracy. I combine a chemist's eye for detail with an educator's clarity — and a strong sense
+                of responsibility for the work I put my name to.
+            </p>
+            <div class="about-signature">
+                <div>
+                    <div class="signature-line">Signed,</div>
+                    <div class="signature-name">Firna Ardiyana</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-panel">
+            <div class="stat-cell">
+                <div class="stat-code">MET-01</div>
+                <div class="stat-number"><span class="counter" data-target="3.76" data-decimal="2">0</span><span class="unit">/4.0</span></div>
+                <div class="stat-caption">Cumulative GPA,<br>Chemistry Education</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-code">MET-02</div>
+                <div class="stat-number"><span class="counter" data-target="4">0</span><span class="unit">yrs</span></div>
+                <div class="stat-caption">Academic &amp; practical experience</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-code">MET-03</div>
+                <div class="stat-number"><span class="counter" data-target="5">0</span><span class="unit">+</span></div>
+                <div class="stat-caption">Analytical methods mastered (Iodine, Biuret, Soxhlet, Fehling)</div>
+            </div>
+            <div class="stat-cell">
+                <div class="stat-code">MET-04</div>
+                <div class="stat-number"><span class="counter" data-target="100">0</span><span class="unit">%</span></div>
+                <div class="stat-caption">Commitment to accuracy &amp; documentation</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ EXPERIENCE ============ -->
+<section class="section experience reveal" id="experience">
+    <div class="section-header">
+        <div class="section-ref">SEC-03 / Experience</div>
+        <h2 class="section-title">Professional <span class="accent">journey.</span></h2>
+        <p class="section-desc">From the lab bench to the production floor — a record of coordination, documentation, and continuous learning.</p>
+    </div>
+
+    <div class="timeline" id="timeline">
+
+        <!-- CURRENT ROLE -->
+        <div class="tl-item">
+            <div class="tl-node">
+                <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25"/></svg>
+                <div class="inner-dot"></div>
+            </div>
+            <div class="tl-card">
+                <div class="tl-header">
+                    <div class="tl-meta">
+                        <h3 class="tl-role">Technical Coordination &amp; Quality Assurance</h3>
+                        <div class="tl-company">PT Merak Chemicals Indonesia — Cilegon, Indonesia</div>
+                    </div>
+                    <div class="tl-date current">Nov 2025 — Present</div>
+                </div>
+                <ul class="tl-list">
+                    <li>Coordinate workflows between <strong>operations, production, and management</strong> to keep projects on schedule and aligned with quality standards.</li>
+                    <li>Study and apply <strong>product specifications, QA procedures, and regulatory documentation</strong> to support consistent compliance across the plant.</li>
+                    <li>Maintain the integrity of QA records and the agreement database through the <strong>Odoo ERP system</strong>, improving traceability and version control.</li>
+                    <li>Record and analyze operational <strong>KPIs — including production rate and PTA ratio</strong> — that inform management decision-making.</li>
+                    <li>Actively participate in the <strong>Integrated Management System (IMS)</strong> audit cycle, from document preparation through findings follow-up.</li>
+                    <li>Design and build <strong>Power BI dashboards</strong> that visualize QA metrics and streamline regular customer contact monitoring.</li>
+                </ul>
+                <div class="tl-tags">
+                    <span class="tl-tag">Quality Assurance</span>
+                    <span class="tl-tag">Odoo ERP</span>
+                    <span class="tl-tag">Power BI</span>
+                    <span class="tl-tag">IMS Audit</span>
+                    <span class="tl-tag">KPI Monitoring</span>
+                    <span class="tl-tag">Documentation</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CHEMISTRY TEACHER -->
+        <div class="tl-item">
+            <div class="tl-node">
+                <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25"/></svg>
+                <div class="inner-dot"></div>
+            </div>
+            <div class="tl-card">
+                <div class="tl-header">
+                    <div class="tl-meta">
+                        <h3 class="tl-role">Chemistry Teacher</h3>
+                        <div class="tl-company">SMAN 1 Kramatwatu — Serang, Indonesia</div>
+                    </div>
+                    <div class="tl-date">Sep 2024 — Nov 2024</div>
+                </div>
+                <ul class="tl-list">
+                    <li>Delivered chemistry instruction aligned with the <strong>Kurikulum Merdeka</strong> framework, supporting the lead teacher across multiple classes.</li>
+                    <li>Designed tailored <strong>teaching modules (Modul Ajar) and student worksheets (LKPD)</strong> to match the curriculum and student learning levels.</li>
+                    <li>Supervised extracurricular activities — sharpening classroom leadership, communication, and mentoring skills that now translate directly into stakeholder engagement.</li>
+                </ul>
+                <div class="tl-tags">
+                    <span class="tl-tag">Curriculum Design</span>
+                    <span class="tl-tag">Chemistry</span>
+                    <span class="tl-tag">Mentoring</span>
+                    <span class="tl-tag">Public Communication</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- PRIVATE TUTOR -->
+        <div class="tl-item">
+            <div class="tl-node">
+                <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25"/></svg>
+                <div class="inner-dot"></div>
+            </div>
+            <div class="tl-card">
+                <div class="tl-header">
+                    <div class="tl-meta">
+                        <h3 class="tl-role">Private Tutor (TK — SD)</h3>
+                        <div class="tl-company">Independent — Cilegon, Indonesia</div>
+                    </div>
+                    <div class="tl-date">2020 — 2021</div>
+                </div>
+                <ul class="tl-list">
+                    <li>Delivered <strong>personalized academic support</strong> to early-education and elementary students, adapting methods to individual learning styles.</li>
+                    <li>Built strong trust with parents and students through clear progress reporting and consistent engagement.</li>
+                </ul>
+                <div class="tl-tags">
+                    <span class="tl-tag">Tutoring</span>
+                    <span class="tl-tag">Adaptability</span>
+                    <span class="tl-tag">Time Management</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- DISKOMINFO -->
+        <div class="tl-item">
+            <div class="tl-node">
+                <svg viewBox="0 0 100 100"><polygon points="50,3 95,25 95,75 50,97 5,75 5,25"/></svg>
+                <div class="inner-dot"></div>
+            </div>
+            <div class="tl-card">
+                <div class="tl-header">
+                    <div class="tl-meta">
+                        <h3 class="tl-role">Administrative Assistant</h3>
+                        <div class="tl-company">DISKOMINFO Kota Cilegon — Cilegon, Indonesia</div>
+                    </div>
+                    <div class="tl-date">Aug 2018 — Oct 2018</div>
+                </div>
+                <ul class="tl-list">
+                    <li>Managed <strong>document archiving, meeting scheduling, and official correspondence</strong> for government communications operations.</li>
+                    <li>Served as a <strong>liaison between internal teams and external stakeholders</strong>, supporting smooth day-to-day office operations.</li>
+                    <li>Built an early grounding in structured administration that carries through to my current QA documentation work.</li>
+                </ul>
+                <div class="tl-tags">
+                    <span class="tl-tag">Administration</span>
+                    <span class="tl-tag">Documentation</span>
+                    <span class="tl-tag">Stakeholder Liaison</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+<!-- ============ EDUCATION ============ -->
+<section class="section education reveal" id="education">
+    <div class="section-header">
+        <div class="section-ref">SEC-04 / Education</div>
+        <h2 class="section-title">Academic <span class="accent">foundation.</span></h2>
+        <p class="section-desc">A chemistry-first education rooted in laboratory technique, instrumental analysis, and applied research.</p>
+    </div>
+
+    <div class="edu-main">
+        <div class="edu-main-content">
+            <div class="edu-header">
+                <div>
+                    <h3 class="edu-degree">Bachelor of Chemistry Education (S.Pd.)</h3>
+                    <div class="edu-university">Universitas Sultan Ageng Tirtayasa — Serang</div>
+                </div>
+                <div class="edu-period">Jul 2021 — Apr 2025</div>
+            </div>
+
+            <div class="edu-gpa">
+                <div>
+                    <div class="edu-gpa-label">Cumulative GPA</div>
+                    <div class="edu-gpa-value">3.76 <span class="denominator">/ 4.00</span></div>
+                </div>
+            </div>
+
+            <div class="edu-achievements">
+                <div class="edu-achievement">
+                    <div class="edu-achievement-icon">
+                        <svg viewBox="0 0 24 24"><path d="M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+                    </div>
+                    <h4>Core Coursework</h4>
+                    <p>Education Management, Laboratory Management, Instrumental Chemistry, and Statistical Research Analysis.</p>
+                </div>
+                <div class="edu-achievement">
+                    <div class="edu-achievement-icon">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <h4>Applied Projects</h4>
+                    <p>Developed ice cream from plantain peels and a red ginger diffuser — translating lab technique into product innovation.</p>
+                </div>
+                <div class="edu-achievement">
+                    <div class="edu-achievement-icon">
+                        <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
+                    </div>
+                    <h4>Analytical Methods</h4>
+                    <p>Carbohydrate, protein, and fat analysis via <strong>Iodine, Benedict/Fehling, Biuret, and Soxhlet</strong> methods.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="edu-secondary">
+        <div class="edu-sec-card">
+            <div>
+                <h5>SMK Negeri 1 Cilegon</h5>
+                <p>Vocational High School · Internship at DISKOMINFO Cilegon</p>
+            </div>
+            <div class="edu-sec-year">2017 — 2020</div>
+        </div>
+        <div class="edu-sec-card">
+            <div>
+                <h5>SMP Negeri 3 Kota Cilegon</h5>
+                <p>Junior High School · Student council coordinator</p>
+            </div>
+            <div class="edu-sec-year">2014 — 2017</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ SKILLS ============ -->
+<section class="section skills reveal" id="skills">
+    <div class="section-header">
+        <div class="section-ref">SEC-05 / Skills</div>
+        <h2 class="section-title">Capability <span class="accent">matrix.</span></h2>
+        <p class="section-desc">Technical fluency across QA, chemistry, and data visualization — reinforced by strong communication and organizational discipline.</p>
+    </div>
+
+    <!-- TECHNICAL + TOOLS -->
+    <div class="skills-grid">
+        <div>
+            <div class="skill-category-head">
+                <div class="skill-category-num">CAP-A</div>
+                <h3>QA &amp; Technical Proficiencies</h3>
+            </div>
+            <div class="skill-bars-wrapper">
+                <div class="skill-bar">
+                    <div class="skill-bar-head">
+                        <span class="skill-bar-label">QA Documentation &amp; Compliance</span>
+                        <span class="skill-bar-value">// ADVANCED</span>
+                    </div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill" data-level="92"></div></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-head">
+                        <span class="skill-bar-label">Laboratory &amp; Analytical Chemistry</span>
+                        <span class="skill-bar-value">// ADVANCED</span>
+                    </div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill" data-level="88"></div></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-head">
+                        <span class="skill-bar-label">KPI Monitoring &amp; Reporting</span>
+                        <span class="skill-bar-value">// PROFICIENT</span>
+                    </div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill" data-level="85"></div></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-head">
+                        <span class="skill-bar-label">Power BI &amp; Data Visualization</span>
+                        <span class="skill-bar-value">// PROFICIENT</span>
+                    </div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill" data-level="78"></div></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-head">
+                        <span class="skill-bar-label">Odoo ERP Documentation</span>
+                        <span class="skill-bar-value">// DEVELOPING</span>
+                    </div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill" data-level="72"></div></div>
+                </div>
+                <div class="skill-bar">
+                    <div class="skill-bar-head">
+                        <span class="skill-bar-label">IMS Audit Exposure</span>
+                        <span class="skill-bar-value">// DEVELOPING</span>
+                    </div>
+                    <div class="skill-bar-track"><div class="skill-bar-fill" data-level="70"></div></div>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="skill-category-head">
+                <div class="skill-category-num">CAP-B</div>
+                <h3>Tools &amp; Platforms</h3>
+            </div>
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="1"/><path d="M3 9h18M9 3v18"/></svg></div>
+                    <div class="tool-name">MS Excel</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg></div>
+                    <div class="tool-name">MS Word</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18"/><path d="M8 8h8v8H8zM8 12h8"/></svg></div>
+                    <div class="tool-name">PowerPoint</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/></svg></div>
+                    <div class="tool-name">Power BI</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M2 12h20M12 2a15 15 0 0 1 0 20M12 2a15 15 0 0 0 0 20"/></svg></div>
+                    <div class="tool-name">Odoo ERP</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M10 2v6l-3 3M14 2v6l3 3"/><path d="M7 11h10v8a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2z"/></svg></div>
+                    <div class="tool-name">Lab Instrumen</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18z"/></svg></div>
+                    <div class="tool-name">Canva</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
+                    <div class="tool-name">Soxhlet</div>
+                </div>
+                <div class="tool-card">
+                    <div class="tool-icon"><svg viewBox="0 0 24 24"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="9"/></svg></div>
+                    <div class="tool-name">Iodine Test</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOFT SKILLS -->
+    <div style="margin-top: 4rem;">
+        <div class="skill-category-head">
+            <div class="skill-category-num">CAP-C</div>
+            <h3>Soft Skills &amp; Professional Traits</h3>
+        </div>
+        <div class="soft-tags">
+            <span class="soft-tag">Communication</span>
+            <span class="soft-tag">Teamwork &amp; Collaboration</span>
+            <span class="soft-tag">Time Management</span>
+            <span class="soft-tag">Problem Solving</span>
+            <span class="soft-tag">Attention to Detail</span>
+            <span class="soft-tag">Adaptability</span>
+            <span class="soft-tag">Analytical Thinking</span>
+            <span class="soft-tag">Cross-team Coordination</span>
+            <span class="soft-tag">Stakeholder Liaison</span>
+            <span class="soft-tag">Documentation Discipline</span>
+            <span class="soft-tag">Mentoring</span>
+            <span class="soft-tag">Design &amp; Visual Presentation</span>
+        </div>
+    </div>
+</section>
+
+<!-- ============ ORGANIZATIONS ============ -->
+<section class="section organizations reveal" id="organizations">
+    <div class="section-header">
+        <div class="section-ref">SEC-06 / Activities</div>
+        <h2 class="section-title">Organizational <span class="accent">experience.</span></h2>
+        <p class="section-desc">Leadership and service roles that sharpened my communication, financial accountability, and program coordination skills.</p>
+    </div>
+
+    <div class="org-grid">
+        <div class="org-card">
+            <div class="org-header">
+                <div>
+                    <div class="org-role">Treasurer (Bendahara II)</div>
+                    <div class="org-name">RISMA An-Ni'mah — Cilegon</div>
+                </div>
+                <div class="org-period">Apr 2021 — Now</div>
+            </div>
+            <p class="org-desc">
+                Support the head treasurer in managing organizational finances, preparing income and
+                expense reports with Microsoft Excel, and maintaining reporting discipline.
+            </p>
+            <div class="org-badge">ACTIVE</div>
+        </div>
+
+        <div class="org-card">
+            <div class="org-header">
+                <div>
+                    <div class="org-role">Talent &amp; Interest Dept. Member</div>
+                    <div class="org-name">Himpunan Mahasiswa Pendidikan Kimia, UNTIRTA</div>
+                </div>
+                <div class="org-period">Mar — Dec 2022</div>
+            </div>
+            <p class="org-desc">
+                Ran programs for the Chemistry Education department's <strong>8th Dies Natalis</strong>,
+                managed contestant registration via Linktree, coordinated new-member recruitment,
+                and secured external sponsorships through proposals.
+            </p>
+            <div class="org-badge">COMPLETED</div>
+        </div>
+
+        <div class="org-card">
+            <div class="org-header">
+                <div>
+                    <div class="org-role">Politics Section Member</div>
+                    <div class="org-name">OSIS SMK Negeri 1 Cilegon</div>
+                </div>
+                <div class="org-period">2018 — 2019</div>
+            </div>
+            <p class="org-desc">
+                Contributed to student council governance activities, building early experience
+                in team collaboration and organized decision-making.
+            </p>
+            <div class="org-badge">COMPLETED</div>
+        </div>
+
+        <div class="org-card">
+            <div class="org-header">
+                <div>
+                    <div class="org-role">Section Coordinator</div>
+                    <div class="org-name">OSIS SMP Negeri 3 Cilegon</div>
+                </div>
+                <div class="org-period">2014 — 2016</div>
+            </div>
+            <p class="org-desc">
+                Coordinated the Ethics (Budi Pekerti) and Civic Life sections — developing leadership
+                skills early and guiding small teams toward shared goals.
+            </p>
+            <div class="org-badge">COMPLETED</div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section class="contact" id="contact">
+    <div class="contact-inner">
+        <div>
+            <div class="contact-ref">SEC-07 / Let's Connect</div>
+            <h2 class="contact-title">Open to the <span class="accent">next</span> challenge.</h2>
+            <p class="contact-desc">
+                I'm actively developing my QA, technical coordination, and data skills — and I'm open
+                to conversations around roles in quality assurance, compliance, and technical operations
+                in the petrochemical and manufacturing sectors.
+            </p>
+            <div class="contact-ctas">
+                <a href="mailto:firnaardiyana0668@gmail.com" class="btn btn-teal">
+                    Start a conversation
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+                </a>
+                <a href="CV_Firna_Ardiyana.pdf" download class="btn btn-outline-light">
+                    Download CV
+                    <svg class="no-move" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                </a>
+            </div>
+        </div>
+
+        <div class="contact-channels">
+            <a href="mailto:firnaardiyana0668@gmail.com" class="channel" data-copy="firnaardiyana0668@gmail.com">
+                <div class="channel-icon">
+                    <svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="1"/><polyline points="3,7 12,13 21,7"/></svg>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-label">Email · Click to copy</div>
+                    <div class="channel-value">firnaardiyana0668@gmail.com</div>
+                </div>
+                <div class="channel-action">COPY →</div>
+            </a>
+
+            <a href="tel:+6288295498951" class="channel" data-copy="+62 882-9549-8951">
+                <div class="channel-icon">
+                    <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-label">Phone · Click to copy</div>
+                    <div class="channel-value">(+62) 882-9549-8951</div>
+                </div>
+                <div class="channel-action">COPY →</div>
+            </a>
+
+            <a href="https://linkedin.com/in/firnaardiyana" target="_blank" rel="noopener" class="channel">
+                <div class="channel-icon">
+                    <svg viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-label">LinkedIn · View profile</div>
+                    <div class="channel-value">linkedin.com/in/firnaardiyana</div>
+                </div>
+                <div class="channel-action">VISIT →</div>
+            </a>
+
+            <div class="channel" style="cursor: default;">
+                <div class="channel-icon">
+                    <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </div>
+                <div class="channel-content">
+                    <div class="channel-label">Based In</div>
+                    <div class="channel-value">Cilegon, Banten — Indonesia</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer>
+    <span>© 2026 · <span class="accent">FIRNA ARDIYANA</span> · ALL RIGHTS RESERVED</span>
+    <span>DOC ID · FA-PORT-V1 · BUILT WITH PRECISION</span>
+</footer>
+
+<!-- ============ BACK TO TOP ============ -->
+<button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="18 15 12 9 6 15"/></svg>
+</button>
+
+<!-- ============ TOAST ============ -->
+<div class="toast" id="toast">
+    <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+    <span id="toastMsg">Copied to clipboard</span>
+</div>
+
+<script>
+// ================================================================
+// PRELOADER
+// ================================================================
+window.addEventListener('load', () => {
+    setTimeout(() => {
+        document.getElementById('preloader').classList.add('hidden');
+    }, 1400);
+});
+
+// ================================================================
+// SCROLL PROGRESS + NAV SCROLL STATE + BACK TO TOP
+// ================================================================
+const scrollProgress = document.getElementById('scrollProgress');
+const navbar = document.getElementById('navbar');
+const backToTop = document.getElementById('backToTop');
+
+window.addEventListener('scroll', () => {
+    const scrolled = window.scrollY;
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const progress = (scrolled / maxScroll) * 100;
+    scrollProgress.style.width = progress + '%';
+
+    if (scrolled > 60) navbar.classList.add('scrolled');
+    else navbar.classList.remove('scrolled');
+
+    if (scrolled > 500) backToTop.classList.add('visible');
+    else backToTop.classList.remove('visible');
+});
+
+backToTop.addEventListener('click', () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+});
+
+// ================================================================
+// MOBILE MENU
+// ================================================================
+const menuToggle = document.getElementById('menuToggle');
+const navLinks = document.getElementById('navLinks');
+
+menuToggle.addEventListener('click', () => {
+    navLinks.classList.toggle('open');
+});
+
+navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => navLinks.classList.remove('open'));
+});
+
+// ================================================================
+// SECTION REVEAL ON SCROLL
+// ================================================================
+const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('active');
+        }
+    });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ================================================================
+// TIMELINE ANIMATION (NODES + CARDS)
+// ================================================================
+const tlItems = document.querySelectorAll('.tl-item');
+const timeline = document.getElementById('timeline');
+
+const tlObserver = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+            const idx = Array.from(tlItems).indexOf(entry.target);
+            setTimeout(() => {
+                entry.target.classList.add('visible');
+                entry.target.classList.add('active');
+            }, idx * 120);
+        }
+    });
+}, { threshold: 0.2 });
+
+tlItems.forEach(item => tlObserver.observe(item));
+
+// Update timeline rail fill based on scroll
+function updateTimelineRail() {
+    if (!timeline) return;
+    const rect = timeline.getBoundingClientRect();
+    const total = rect.height;
+    const windowMid = window.innerHeight * 0.5;
+    const scrolled = windowMid - rect.top;
+    const progress = Math.max(0, Math.min(1, scrolled / total));
+    timeline.style.setProperty('--progress', (progress * 100) + '%');
+}
+
+window.addEventListener('scroll', updateTimelineRail);
+updateTimelineRail();
+
+// ================================================================
+// ANIMATED COUNTERS
+// ================================================================
+const counters = document.querySelectorAll('.counter');
+const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const el = entry.target;
+            const target = parseFloat(el.dataset.target);
+            const decimals = parseInt(el.dataset.decimal || '0');
+            const duration = 1800;
+            const startTime = performance.now();
+
+            function animate(now) {
+                const elapsed = now - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                const eased = 1 - Math.pow(1 - progress, 3);
+                const current = target * eased;
+                el.textContent = decimals > 0 ? current.toFixed(decimals) : Math.floor(current);
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                } else {
+                    el.textContent = decimals > 0 ? target.toFixed(decimals) : target;
+                }
+            }
+            requestAnimationFrame(animate);
+            counterObserver.unobserve(el);
+        }
+    });
+}, { threshold: 0.5 });
+
+counters.forEach(c => counterObserver.observe(c));
+
+// ================================================================
+// ANIMATED SKILL BARS
+// ================================================================
+const skillBars = document.querySelectorAll('.skill-bar-fill');
+const skillObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const level = entry.target.dataset.level;
+            setTimeout(() => {
+                entry.target.style.width = level + '%';
+            }, 200);
+            skillObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+
+skillBars.forEach(bar => skillObserver.observe(bar));
+
+// ================================================================
+// ACTIVE NAV LINK (based on section in view)
+// ================================================================
+const sections = document.querySelectorAll('section[id], header[id]');
+const navAnchors = document.querySelectorAll('.nav-links a[href^="#"]');
+
+function updateActiveNav() {
+    let current = '';
+    sections.forEach(sec => {
+        const top = sec.offsetTop - 150;
+        if (window.scrollY >= top) current = sec.id;
+    });
+    navAnchors.forEach(a => {
+        a.classList.remove('active');
+        if (a.getAttribute('href') === '#' + current) a.classList.add('active');
+    });
+}
+
+window.addEventListener('scroll', updateActiveNav);
+updateActiveNav();
+
+// ================================================================
+// SMOOTH SCROLL
+// ================================================================
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href === '#') return;
+        const target = document.querySelector(href);
+        if (target) {
+            e.preventDefault();
+            const offset = target.offsetTop - 70;
+            window.scrollTo({ top: offset, behavior: 'smooth' });
+        }
+    });
+});
+
+// ================================================================
+// COPY TO CLIPBOARD
+// ================================================================
+const toast = document.getElementById('toast');
+const toastMsg = document.getElementById('toastMsg');
+let toastTimer;
+
+document.querySelectorAll('[data-copy]').forEach(el => {
+    el.addEventListener('click', (e) => {
+        e.preventDefault();
+        const text = el.dataset.copy;
+        navigator.clipboard.writeText(text).then(() => {
+            toastMsg.textContent = `Copied · ${text}`;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2200);
+        }).catch(() => {
+            // fallback
+            window.location.href = el.href;
+        });
+    });
+});
+
+// ================================================================
+// CARD TILT ON HOVER (subtle, performance-friendly)
+// ================================================================
+const tiltCards = document.querySelectorAll('.org-card, .tool-card');
+tiltCards.forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+        const rect = card.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(800px) rotateX(${y * -4}deg) rotateY(${x * 4}deg) translateY(-5px)`;
+    });
+    card.addEventListener('mouseleave', () => {
+        card.style.transform = '';
+    });
+});
+
+// ================================================================
+// PHOTO PARALLAX IN HERO
+// ================================================================
+const photoFrame = document.querySelector('.photo-frame');
+const hero = document.querySelector('.hero');
+
+if (photoFrame && hero) {
+    hero.addEventListener('mousemove', (e) => {
+        const rect = hero.getBoundingClientRect();
+        const x = (e.clientX - rect.left) / rect.width - 0.5;
+        const y = (e.clientY - rect.top) / rect.height - 0.5;
+        photoFrame.style.transform = `translate(${x * 10}px, ${y * 10}px)`;
+    });
+    hero.addEventListener('mouseleave', () => {
+        photoFrame.style.transform = '';
+    });
+}
+</script>
+</body>
+</html>
